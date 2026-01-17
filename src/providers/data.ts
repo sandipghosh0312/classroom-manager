@@ -1,6 +1,6 @@
 import { BACKEND_BASE_URL } from "@/constants";
 import { createDataProvider, CreateDataProviderOptions } from "@refinedev/rest";
-import { ListResponse } from "@/types";
+import { CreateResponse, ListResponse } from "@/types";
 import { HttpError } from "@refinedev/core";
 
 if (!BACKEND_BASE_URL) {
@@ -28,11 +28,11 @@ const buildHttpError = async (response: Response): Promise<HttpError> => {
 const options: CreateDataProviderOptions = {
   getList: {
     getEndpoint: ({ resource }) => resource,
-    buildQueryParams: async ({resource, pagination, filters}) => {
+    buildQueryParams: async ({ resource, pagination, filters }) => {
       const page = pagination?.currentPage ?? 1;
       const pageSize = pagination?.pageSize ?? 10;
 
-      const params: Record<string, string|number> = {page, limit: pageSize};
+      const params: Record<string, string | number> = { page, limit: pageSize };
 
       filters?.forEach((filter) => {
         const field = 'field' in filter ? filter.field : '';
@@ -60,6 +60,16 @@ const options: CreateDataProviderOptions = {
       }
       const payload: ListResponse = await response.clone().json();
       return payload.pagination?.total ?? payload.data?.length ?? 0;
+    }
+  },
+
+  create: {
+    getEndpoint: ({ resource }) => resource,
+    buildBodyParams: async ({ variables }) => variables,
+    mapResponse: async (response) => {
+      const json: CreateResponse = await response.json();
+
+      return json.data ?? [];
     }
   }
 }

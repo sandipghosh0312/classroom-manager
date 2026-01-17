@@ -1,11 +1,15 @@
-import { UploadWidgetValue } from '@/types';
+import { UploadWidgetProps, UploadWidgetValue } from '@/types';
 import { error } from 'console';
 import { set } from 'date-fns';
 import { UploadCloud } from 'lucide-react';
 import React, { use, useEffect, useRef, useState } from 'react'
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/constants";
 
-const UploadWidget = ({ value = null, onChange, disabled = false }) => {
+const UploadWidget: React.FC<UploadWidgetProps> = ({
+    value = null,
+    onChange,
+    disabled = false,
+}) => {
     const [preview, setPreview] = useState<UploadWidgetValue | null>(value);
     const widgetRef = useRef<CloudinaryWidget | null>(null);
     const onChangeRef = useRef(onChange);
