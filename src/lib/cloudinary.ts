@@ -5,12 +5,16 @@ import { source } from "@cloudinary/url-gen/actions/overlay";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { Position } from "@cloudinary/url-gen/qualifiers";
 import { compass } from "@cloudinary/url-gen/qualifiers/gravity";
-import { text } from "@cloudinary/url-gen/qualifiers/source";
+import { image, text } from "@cloudinary/url-gen/qualifiers/source";
 import { TextStyle } from "@cloudinary/url-gen/qualifiers/textStyle";
 
 const cld = new Cloudinary({ cloud: {cloudName: CLOUDINARY_CLOUD_NAME} })
 
 export const bannerPhoto = (imageCldPubId: string, name: string) => {
+    if (!imageCldPubId || !name) {
+        throw new Error("imageCldPubId and name are required for the bannerPhoto");
+    }
+    
     return cld
     .image(imageCldPubId)
     .resize(fill())
